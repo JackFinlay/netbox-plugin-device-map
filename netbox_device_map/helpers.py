@@ -15,8 +15,8 @@ LatLon = tuple[float, float]
 
 def get_device_location(device: Device) -> LatLon | None:
     """If netbox longitude and latitude fields are populated for a device then use them."""
-    if device.longitude and device.latitude:
-        return (device.longitude, device.latitude)
+    if device.latitude and device.longitude:
+        return (device.latitude, device.longitude)
     """... Otherwise extract device geolocation from special custom field"""
     if location_cf := device.custom_field_data.get(LOCATION_CF_NAME):
         return tuple(map(float, location_cf.replace(' ', '').split(',', maxsplit=1)))
