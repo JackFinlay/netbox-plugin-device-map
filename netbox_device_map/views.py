@@ -31,7 +31,8 @@ class MapView(PermissionRequiredMixin, View):
             #interfaces = interfaces.filter(Q(untagged_vlan=vlan) | Q(tagged_vlans=vlan))
             devices = Device.objects.filter(interfaces__in=interfaces).distinct()
             if device_roles := form.cleaned_data['device_roles']:
-                devices = devices.filter(role=device_roles)
+                devices = devices.filter(role__in=device_roles)
+                print(f"Device roles are :{device_roles}")
 
             geolocated_devices = {d: coords for d in devices if (coords := get_device_location(d))}
             non_geolocated_devices = set(devices) - set(geolocated_devices.keys())
