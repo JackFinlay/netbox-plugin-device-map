@@ -31,7 +31,7 @@ class MapView(PermissionRequiredMixin, View):
             #interfaces = interfaces.filter(Q(untagged_vlan=vlan) | Q(tagged_vlans=vlan))
             devices = Device.objects.filter(interfaces__in=interfaces).distinct()
             if device_roles := form.cleaned_data['device_roles']:
-                devices = devices.filter(device_role__in=device_roles)
+                devices = devices.filter(role=device_roles)
 
             geolocated_devices = {d: coords for d in devices if (coords := get_device_location(d))}
             non_geolocated_devices = set(devices) - set(geolocated_devices.keys())
@@ -66,8 +66,7 @@ class ConnectedCpeAjaxView(PermissionRequiredMixin, View):
             #    .filter(device_role__name=plugin_settings['cpe_device_role']).order_by()
             connected_devices = [dict(id=d.id, name=d.name, url=d.get_absolute_url(), comments=d.comments)
                                  for d in connected_devices_qs]
-            # Sorting list of CPE devices by the sequence of integers contained in the comments
-            connected_devices.sort(key=lambda d: tuple(int(n) for n in INTEGER_REGEXP.findall(d['comments'])))
+
             return JsonResponse(dict(status=True, cpe_devices=connected_devices,
                                      device_type=f'{device.device_type.manufacturer.name} {device.device_type.model}'))
         else:
