@@ -28,7 +28,7 @@ class MapView(PermissionRequiredMixin, View):
             interfaces = Interface.objects.all()
             vlan = form.cleaned_data['vlan']
 
-            interfaces = interfaces.filter(Q(untagged_vlan=vlan) | Q(tagged_vlans=vlan))
+            #interfaces = interfaces.filter(Q(untagged_vlan=vlan) | Q(tagged_vlans=vlan))
             devices = Device.objects.filter(interfaces__in=interfaces).distinct()
             if device_roles := form.cleaned_data['device_roles']:
                 devices = devices.filter(device_role__in=device_roles)
