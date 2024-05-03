@@ -61,8 +61,9 @@ class ConnectedCpeAjaxView(PermissionRequiredMixin, View):
         form = self.form(request.GET)
         if form.is_valid():
             data = form.cleaned_data
-            connected_devices_qs = get_connected_devices(device, vlan=data['vlan'])\
-                .filter(device_role__name=plugin_settings['cpe_device_role']).order_by()
+            connected_devices_qs = get_connected_devices(device, vlan=data['vlan'])
+            #\
+            #    .filter(device_role__name=plugin_settings['cpe_device_role']).order_by()
             connected_devices = [dict(id=d.id, name=d.name, url=d.get_absolute_url(), comments=d.comments)
                                  for d in connected_devices_qs]
             # Sorting list of CPE devices by the sequence of integers contained in the comments
