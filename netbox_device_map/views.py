@@ -26,7 +26,7 @@ class MapView(PermissionRequiredMixin, View):
         form = self.form(request.GET)
         if form.is_valid():
             interfaces = Interface.objects.all()
-            vlan = form.cleaned_data['vlan']
+            #vlan = form.cleaned_data['vlan']
 
             #interfaces = interfaces.filter(Q(untagged_vlan=vlan) | Q(tagged_vlans=vlan))
             devices = Device.objects.filter(interfaces__in=interfaces).distinct()
@@ -37,7 +37,7 @@ class MapView(PermissionRequiredMixin, View):
             non_geolocated_devices = set(devices) - set(geolocated_devices.keys())
 
             map_data = configure_leaflet_map("geomap", geolocated_devices, form.cleaned_data['calculate_connections'])
-            map_data['vlan'] = vlan.id
+            #map_data['vlan'] = vlan.id
             return render(request, self.template_name, context=dict(
                 filter_form=form, map_data=map_data, non_geolocated_devices=non_geolocated_devices
             ))
