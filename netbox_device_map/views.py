@@ -25,11 +25,11 @@ class MapView(PermissionRequiredMixin, View):
         """Device map view"""
         form = self.form(request.GET)
         if form.is_valid():
-            interfaces = Interface.objects.all()
+            #interfaces = Interface.objects.all()
             #vlan = form.cleaned_data['vlan']
 
             #interfaces = interfaces.filter(Q(untagged_vlan=vlan) | Q(tagged_vlans=vlan))
-            devices = Device.objects.filter(interfaces__in=interfaces).distinct()
+            devices = Device.objects.all().distinct()
             if device_roles := form.cleaned_data['device_roles']:
                 devices = devices.filter(role__in=device_roles)
                 print(f"Device roles are :{device_roles}")
